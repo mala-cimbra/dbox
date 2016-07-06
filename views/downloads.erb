@@ -1,0 +1,10 @@
+<h3 id="downloads">Downloads</h3>
+<table>
+    <% @list.sort.each do |file| %>
+    <tr>
+        <td><a href="/delete/<%= file %>"><i title="Elimina" class="fa fa-trash" aria-hidden="true"></i>
+</a></td>
+        <td><a href="/downloads/<%= file %>"><%= file %></a></td>
+    </tr>
+    <% end %>
+</table>

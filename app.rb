@@ -47,6 +47,9 @@ end
 
 get '/downloads/:filename' do |filename|
     if File.exist?("./public/uploads/#{filename}")
+        dl_count = db.execute("SELECT dl_number from files WHERE filename = '#{filename}';")
+        new_dl_count = dl_count.flatten[0].to_i + 1
+        db.execute("UPDATE files SET dl_number=#{new_dl_count}, last_dl_ip='#{request.ip}', last_dl_date='#{Time.now}' WHERE filename='#{filename}';")
         send_file("./public/uploads/#{filename}", :filename => filename, :disposition => :attachment, :type => 'application/octet-stream')
     else
         redirect to('/downloads')
@@ -69,15 +72,15 @@ post '/upload' do
         end
         shadigest = Digest::SHA256.hexdigest(File.read(path))
         delete_password = params['password']
-        db.execute("INSERT INTO files VALUES(NULL, '#{filename}', '#{path}', '#{shadigest}', '#{request.ip}', '#{Time.now}', 0, NULL, NULL, '#{delete_password}' )")
+        db.execute("INSERT INTO files VALUES(NULL, '#{filename}', '#{path}', '#{shadigest}', '#{request.ip}', '#{Time.now}', 0, NULL, NULL, '#{delete_password}');")
     end
     redirect to('/downloads')
 end
 
 get '/delete/:filename' do |filename|
     if File.exist?("./public/uploads/#{filename}")
-        db_file = db.execute("SELECT * FROM files where filename = '#{filename}'")
-        db.execute("DELETE FROM files WHERE Id = #{db_file[0][0]}")
+        db_file = db.execute("SELECT * FROM files where filename = '#{filename}';")
+        db.execute("DELETE FROM files WHERE Id = #{db_file[0][0]};")
         File.delete("./public/uploads/#{filename}")
         redirect to ('/downloads')
     else

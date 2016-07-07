@@ -2,6 +2,7 @@
 <p>Qui puoi caricare qualsiasi cosa.</p>
 <form action="/upload" enctype="multipart/form-data" method="POST">
     <p><input type="file" name="file" /></p>
-    <p><input type="text" name="password" placeholder="Password" /> <i title="Password per l'eliminazione del file. Non dimenticarla!" class="fa fa-info-circle" aria-hidden="true"></i></p>
+    <p><input type="text" name="password" placeholder="Password" /> <a href="#carica" onclick="toggle_visibility('info');"><i class="fa fa-info-circle" aria-hidden="true"></i></a></p>
+    <p style="display:none;" id="info">Imposta la password per l'eliminazione del file. Non dimenticarla!</p>
     <p><input type="submit" value="Carica" /></p>
 </form>

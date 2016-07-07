@@ -1,11 +1,24 @@
 h1, h2, h3 {
     line-height: 1.2;
-    }
+}
 body {
     margin: 2.5em auto;
     max-width: 50em;
     line-height: 1.6;
-    font-size: 1em;
+    font-size: 1.2em;
     color: #444;
     padding: 0 1em;
-    }
+}
+
+/* stile dei link */
+a:link {
+    color: #444;
+}
+a:visited {
+    color: #444;
+}
+a:hover {
+}
+
+a:active {
+}

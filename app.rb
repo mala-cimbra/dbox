@@ -20,11 +20,11 @@ db = SQLite3::Database.open("database.db")
 # Ricordati di toglierlo quando
 # va in produzione
 #------------------------------
-=begin
+
 use Rack::Auth::Basic, "Login" do |username, password|
-    username == "admin" and password == "metti password"
+    username == "admin" and password == "mettipassword"
 end
-=end
+
 #------------------------------
 
 get '/' do

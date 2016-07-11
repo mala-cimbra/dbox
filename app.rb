@@ -74,7 +74,7 @@ get '/downloads/:filename' do |filename|
     if File.exist?("./public/uploads/#{filename}")
         # tira fuori il numero di dl del file per aumentare il contatore
         dl_count = db.execute("SELECT dl_number from files WHERE filename = '#{filename}';")
-        new_dl_count = dl_count.flatten[0].to_i + 1 #lo flatta per il discorso sopra e aggiunge 1
+        new_dl_count = dl_count.flatten[0].to_i + 1 # lo flatta per il discorso sopra e aggiunge 1
         # aggiorna il db, sql a nastro
         db.execute("UPDATE files SET dl_number=#{new_dl_count}, last_dl_ip='#{request.ip}', last_dl_date='#{Time.now}' WHERE filename='#{filename}';")
         # spedisce il file

@@ -8,6 +8,15 @@ require 'sqlite3'
 require 'json'
 require 'base64'
 require 'digest'
+require 'pp' # messaggi di debug
+
+def debug(descrizione, text)
+  puts "--------------DEBUG--------------"
+  puts descrizione
+  puts "--"
+  pp text
+  puts "---------------------------------"
+end
 
 #-----------------------------
 #
@@ -74,6 +83,7 @@ get '/downloads/:filename' do |filename|
     if File.exist?("./public/uploads/#{filename}")
         # tira fuori il numero di dl del file per aumentare il contatore
         dl_count = db.execute("SELECT dl_number from files WHERE filename = '#{filename}';")
+        debug("conteggio download, query", dl_count)
         new_dl_count = dl_count.flatten[0].to_i + 1 # lo flatta per il discorso sopra e aggiunge 1
         # aggiorna il db, sql a nastro
         db.execute("UPDATE files SET dl_number=#{new_dl_count}, last_dl_ip='#{request.ip}', last_dl_date='#{Time.now}' WHERE filename='#{filename}';")
@@ -119,20 +129,43 @@ end
 # TODO creare la pagina di protezione con la password
 # devo pensarla bene
 get '/delete/:filename' do |filename|
-    #se il file esiste
-    if File.exist?("./public/uploads/#{filename}")
-        # prima togli dal db, così se scazza almeno il frontend funziona
-        # cerca la riga con quel nome file
-        # TODO aggiungere più campi di ricerca (somma hash?, boh)
-        db_file = db.execute("SELECT * FROM files where filename = '#{filename}';")
-        # elimina la riga dal db
-        db.execute("DELETE FROM files WHERE Id = #{db_file[0][0]};")
-        # elimina il file
-        File.delete("./public/uploads/#{filename}")
-        redirect to ('/downloads') # vai ai downloads
+    # se il file esiste e se c'è una corrispondenza nel db
+  file_row = db.execute("SELECT * FROM files WHERE filename='#{filename}';")
+  debug("file_row", file_row)
+    if File.exist?("./public/uploads/#{filename}") && !file_row[0].empty?
+        redirect to ('/delete/#{filename}/confirm') # vai alla conferma di cancellazione
     else
         redirect to ('/downloads') # vai ai downloads
     end
+end
+
+get '/delete/:filename/confirm' do |filename|
+  file_row = db.execute("SELECT * FROM files WHERE filename='#{filename}';")
+  debug("file_row", file_row)
+  @filename = filename
+  erb :delete
+end
+
+post '/delete/:filename/confirm' do |filename|
+  db_file = db.execute("SELECT * FROM files WHERE filename = '#{filename}';")
+  debug("db_file", db_file)
+  delete_password = params["deletepassword"]
+  db_delete_password = db_file[0][9]
+  
+  #se il file esiste
+  if File.exist?("./public/uploads/#{filename}") && !db_file[0].empty? && delete_password == db_delete_password
+      # prima togli dal db, così se scazza almeno il frontend funziona
+      # cerca la riga con quel nome file
+      # TODO aggiungere più campi di ricerca (somma hash?, boh)
+      #db_file = db.execute("SELECT * FROM files WHERE filename = '#{filename}';")
+      # elimina la riga dal db
+      db.execute("DELETE FROM files WHERE Id = #{db_file[0][0]};")
+      # elimina il file
+      File.delete("./public/uploads/#{filename}")
+      redirect to ('/downloads') # vai ai downloads
+  else
+      redirect to ('/downloads') # vai ai downloads
+  end
 end
 
 # se non sai dove andare

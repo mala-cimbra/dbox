@@ -126,19 +126,8 @@ post '/upload' do
 end
 
 # funzione di eliminazione
-# TODO creare la pagina di protezione con la password
+# TODO da debuggare pesantemente
 # devo pensarla bene
-get '/delete/:filename' do |filename|
-    # se il file esiste e se c'è una corrispondenza nel db
-  file_row = db.execute("SELECT * FROM files WHERE filename='#{filename}';")
-  debug("file_row", file_row)
-    if File.exist?("./public/uploads/#{filename}") && !file_row[0].empty?
-        redirect to ('/delete/#{filename}/confirm') # vai alla conferma di cancellazione
-    else
-        redirect to ('/downloads') # vai ai downloads
-    end
-end
-
 get '/delete/:filename/confirm' do |filename|
   file_row = db.execute("SELECT * FROM files WHERE filename='#{filename}';")
   debug("file_row", file_row)

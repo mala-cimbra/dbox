@@ -8,6 +8,7 @@ require 'sqlite3'
 require 'json'
 require 'base64'
 require 'digest'
+require 'magic' # tipo di file
 require 'pp' # messaggi di debug
 
 def debug(descrizione, text)
@@ -69,7 +70,20 @@ get '/downloads' do
     # ci si penserà
     #
     # poi si spedisce @list alla pagina downloads.erb
-    @list = db.execute("SELECT filename FROM files;").flatten
+    # adesso c'è anche il tipo
+    # [[filename, filetype], [filename, filetype], [filename, filetype], [filename, filetype] ...] 
+    @list = db.execute("SELECT filename, filetype FROM files;")
+    @list.map do |file|
+      type = file[1].split("/")
+      case type[0]
+      when "image"
+        file[1] = "<i class=\"fa fa-file-image-o\" aria-hidden=\"true\"></i>"
+      when "audio"
+        file[1] = "<i class=\"fa fa-file-audio-o\" aria-hidden=\"true\"></i>"
+      else
+        file[1] = "<i class=\"fa fa-file-o\" aria-hidden=\"true\"></i>"
+      end
+    end
     erb :downloads
 end
 
@@ -117,10 +131,11 @@ post '/upload' do
         File.open(path, "wb") do |f|
             f.write(tempfile.read)
         end
+        filetype = File.mime(path).split[0] # mimetype del file
         shadigest = Digest::SHA256.hexdigest(File.read(path)) # calcola sommahash
         delete_password = params['password'] # tirami fuori la password
         # aggiungi la cosa al db
-        db.execute("INSERT INTO files VALUES(NULL, '#{filename}', '#{path}', '#{shadigest}', '#{request.ip}', '#{Time.now}', 0, NULL, NULL, '#{delete_password}');")
+        db.execute("INSERT INTO files VALUES(NULL, '#{filename}', '#{path}', '#{shadigest}', '#{request.ip}', '#{Time.now}', 0, NULL, NULL, '#{delete_password}', '#{filetype}');")
     end
     redirect to('/downloads') # mostrami poi quello che hai buttato su
 end

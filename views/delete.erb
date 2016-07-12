@@ -1,4 +1,4 @@
-<h3>Confermi l'eliminazione del file <i><%= @filename %></i>?</h3>
+<h3 id="delete">Confermi l'eliminazione del file <i><%= @filename %></i>?</h3>
 <p>Inserire password</p>
 <form action="/delete/<%= @filename %>/confirm" enctype="multipart/form-data" method="POST">
     <p><input type="text" name="deletepassword" placeholder="Password" />

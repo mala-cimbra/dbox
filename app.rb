@@ -178,7 +178,7 @@ post '/delete/:filename/confirm' do |filename|
     redirect to ('/downloads') # vai ai downloads
 end
 
-get '/info/:filename' do |filename|
+get '/info/:filename/detail' do |filename|
     @db_file = db.execute("SELECT * FROM files WHERE filename = '#{filename}';")
     debug("db_file", @db_file)
     if File.exist?(@db_file[0][2]) && !@db_file[0].empty?

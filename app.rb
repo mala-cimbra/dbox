@@ -9,14 +9,17 @@ require 'json'
 require 'base64'
 require 'digest'
 require 'magic' # tipo di file
+require 'streamio-ffmpeg'
+require 'taglib'
+require 'mini_exiftool'
 require 'pp' # messaggi di debug
 
 def debug(descrizione, text)
-  puts "--------------DEBUG--------------"
-  puts descrizione
-  puts "--"
-  pp text
-  puts "---------------------------------"
+    puts "--------------DEBUG--------------"
+    puts descrizione
+    puts "--"
+    pp text
+    puts "---------------------------------"
 end
 
 #-----------------------------
@@ -43,11 +46,11 @@ db = SQLite3::Database.open("database.db")
 # Ricordati di toglierlo quando
 # va in produzione
 #------------------------------
-
+=begin
 use Rack::Auth::Basic, "Login" do |username, password|
     username == "admin" and password == "mettipassword"
 end
-
+=end
 #------------------------------
 
 # index
@@ -74,15 +77,17 @@ get '/downloads' do
     # [[filename, filetype], [filename, filetype], [filename, filetype], [filename, filetype] ...] 
     @list = db.execute("SELECT filename, filetype FROM files;")
     @list.map do |file|
-      type = file[1].split("/")
-      case type[0]
-      when "image"
-        file[1] = "<i class=\"fa fa-file-image-o\" aria-hidden=\"true\"></i>"
-      when "audio"
-        file[1] = "<i class=\"fa fa-file-audio-o\" aria-hidden=\"true\"></i>"
-      else
-        file[1] = "<i class=\"fa fa-file-o\" aria-hidden=\"true\"></i>"
-      end
+        type = file[1].split("/")
+        case type[0]
+        when "image"
+            file[1] = "<i class=\"fa fa-file-image-o\" aria-hidden=\"true\"></i>"
+        when "audio"
+            file[1] = "<i class=\"fa fa-file-audio-o\" aria-hidden=\"true\"></i>"
+        when "video"
+            file[1] = "<i class=\"fa fa-file-video-o\" aria-hidden=\"true\"></i>"
+        else
+            file[1] = "<i class=\"fa fa-file-o\" aria-hidden=\"true\"></i>"
+        end
     end
     erb :downloads
 end
@@ -127,13 +132,16 @@ post '/upload' do
         tempfile = params['file'][:tempfile] # file temporaneo uploadato, penso vada in /tmp
         filename = params['file'][:filename] # file scritto
         path = "./public/uploads/#{filename}" # percorso di destinazione
+        
         # scrivi
         File.open(path, "wb") do |f|
             f.write(tempfile.read)
         end
+        
         filetype = File.mime(path).split[0] # mimetype del file
         shadigest = Digest::SHA256.hexdigest(File.read(path)) # calcola sommahash
         delete_password = params['password'] # tirami fuori la password
+        
         # aggiungi la cosa al db
         db.execute("INSERT INTO files VALUES(NULL, '#{filename}', '#{path}', '#{shadigest}', '#{request.ip}', '#{Time.now}', 0, NULL, NULL, '#{delete_password}', '#{filetype}');")
     end
@@ -144,32 +152,41 @@ end
 # TODO da debuggare pesantemente
 # devo pensarla bene
 get '/delete/:filename/confirm' do |filename|
-  file_row = db.execute("SELECT * FROM files WHERE filename='#{filename}';")
-  debug("file_row", file_row)
-  @filename = filename
-  erb :delete
+    file_row = db.execute("SELECT * FROM files WHERE filename='#{filename}';")
+    debug("file_row", file_row)
+    @filename = filename
+    erb :delete
 end
 
 post '/delete/:filename/confirm' do |filename|
-  db_file = db.execute("SELECT * FROM files WHERE filename = '#{filename}';")
-  debug("db_file", db_file)
-  delete_password = params["deletepassword"]
-  db_delete_password = db_file[0][9]
-  
-  #se il file esiste
-  if File.exist?("./public/uploads/#{filename}") && !db_file[0].empty? && delete_password == db_delete_password
-      # prima togli dal db, così se scazza almeno il frontend funziona
-      # cerca la riga con quel nome file
-      # TODO aggiungere più campi di ricerca (somma hash?, boh)
-      #db_file = db.execute("SELECT * FROM files WHERE filename = '#{filename}';")
-      # elimina la riga dal db
-      db.execute("DELETE FROM files WHERE Id = #{db_file[0][0]};")
-      # elimina il file
-      File.delete("./public/uploads/#{filename}")
-      redirect to ('/downloads') # vai ai downloads
-  else
-      redirect to ('/downloads') # vai ai downloads
-  end
+    db_file = db.execute("SELECT * FROM files WHERE filename = '#{filename}';")
+    debug("db_file", db_file)
+    delete_password = params["deletepassword"]
+    db_delete_password = db_file[0][9]
+
+    #se il file esiste
+    if File.exist?("./public/uploads/#{filename}") && !db_file[0].empty? && delete_password == db_delete_password
+        # prima togli dal db, così se scazza almeno il frontend funziona
+        # cerca la riga con quel nome file
+        # TODO aggiungere più campi di ricerca (somma hash?, boh)
+        #db_file = db.execute("SELECT * FROM files WHERE filename = '#{filename}';")
+        # elimina la riga dal db
+        db.execute("DELETE FROM files WHERE Id = #{db_file[0][0]};")
+        # elimina il file
+        File.delete("./public/uploads/#{filename}")
+    end
+    redirect to ('/downloads') # vai ai downloads
+end
+
+get '/info/:filename' do |filename|
+    db_file = db.execute("SELECT * FROM files WHERE filename = '#{filename}';")
+    debug("db_file", db_file)
+    if File.exist?("./public/uploads/#{filename}") && !db_file[0].empty?
+        
+        erb :info
+    else
+        redirect to ('/downloads') # vai ai downloads
+    end
 end
 
 # se non sai dove andare

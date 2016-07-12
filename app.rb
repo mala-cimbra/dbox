@@ -60,7 +60,7 @@ end
 
 # funzione dummy POST per postare messaggi - TODO
 post '/message' do
-
+    redirect to('/')
 end
 
 # Pagina download

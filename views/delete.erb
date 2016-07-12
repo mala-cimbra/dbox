@@ -1,6 +1,7 @@
-<h3 id="delete">Confermi l'eliminazione del file <i><%= @filename %></i>?</h3>
+<h2 id="delete">Confermi l'eliminazione del file <i><%= @filename %></i>?</h2>
 <p>Inserire password</p>
 <form action="/delete/<%= @filename %>/confirm" enctype="multipart/form-data" method="POST">
-    <p><input type="text" name="deletepassword" placeholder="Password" />
+    <p><input type="text" name="deletepassword" placeholder="Password" /> <a href="#carica" onclick="toggle_visibility('info');"><i class="fa fa-info-circle" aria-hidden="true"></i></a></p>
+    <p style="display:none;" id="info">Inserire la password di eliminazione. Se non è stata impostata, lasciare vuoto.</p>
     <p><input type="submit" value="Elimina" />
 </form>

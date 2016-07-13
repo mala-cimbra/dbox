@@ -1,18 +1,5 @@
 <h2 id="info">Informazioni su <i><%= @db_file[0][1] %></i></h2>
-<ul>
-    <li><strong>Artista: </strong><%= @arr_data[0] %></li>
-    <li><strong>Titolo: </strong><%= @arr_data[1] %></li>
-    <li><strong>Album: </strong><%= @arr_data[2] %></li>
-    <li><strong>Durata: </strong><%= @arr_data[3] %></li>
-    <li><strong>Bitrate: </strong><%= @arr_data[4] %> kbps</li>
-    <li><strong>Caricato il: </strong></li>
-    <li><strong>Scaricato </strong><strong> volte</strong></li>
-</ul>
-<h3>Anteprima</h3>
-<div align="center"><audio controls>
-    <source src="/downloads/<%= @db_file[0][1] %>" type="<%= @db_file[0][10] %>">
-Il tuo browser è vecchio e non supporta il tag audio. Aggiornati!
-</audio></div>
+<%= @data %>
 <table width=100%>
 <tr>
     <td align="center"><a href="/downloads/<%= @db_file[0][1] %>"><i class="fa fa-download fa-3x" aria-hidden="true"></i></a></td>

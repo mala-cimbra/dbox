@@ -9,20 +9,14 @@ require 'digest'
 require 'pp' # messaggi di debug
 
 #-------------------
-# divisione
+# divisione in moduli
 #-------------------
 require './lib/download'
 require './lib/info'
 require './lib/delete'
 require './lib/upload'
 
-def debug(descrizione, text)
-    puts "--------------DEBUG--------------"
-    puts descrizione
-    puts "--"
-    pp text
-    puts "---------------------------------"
-end
+require './lib/debug'
 
 #------------------------------
 #
@@ -55,8 +49,7 @@ post '/message' do
     redirect to('/')
 end
 
-# se non sai dove andare
-# (errore 404)
+# se non sai dove andare (errore 404)
 # redireziona all'index
 # Non serve fare pagine che mostrano l'errore
 # perché deve funzionare da captive portal

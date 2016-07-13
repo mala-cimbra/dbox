@@ -51,4 +51,4 @@ build-iPhoneSimulator/
 
 *.db
 /public/uploads/*.*
-
+Gemfile.lock

@@ -17,13 +17,13 @@ get '/downloads' do
         type = file[1].split("/")
         case type[0]
         when "image"
-            file[1] = "<i class=\"fa fa-file-image-o\" aria-hidden=\"true\"></i>"
+            file[1] = "<i class=\"fa fa-file-image-o fa-2x\" aria-hidden=\"true\"></i>"
         when "audio"
-            file[1] = "<i class=\"fa fa-file-audio-o\" aria-hidden=\"true\"></i>"
+            file[1] = "<i class=\"fa fa-file-audio-o fa-2x\" aria-hidden=\"true\"></i>"
         when "video"
-            file[1] = "<i class=\"fa fa-file-video-o\" aria-hidden=\"true\"></i>"
+            file[1] = "<i class=\"fa fa-file-video-o fa-2x\" aria-hidden=\"true\"></i>"
         else
-            file[1] = "<i class=\"fa fa-file-o\" aria-hidden=\"true\"></i>"
+            file[1] = "<i class=\"fa fa-file-o fa-2x\" aria-hidden=\"true\"></i>"
         end
     end
     erb :downloads

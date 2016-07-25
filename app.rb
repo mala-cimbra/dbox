@@ -12,7 +12,12 @@ require 'pp' # messaggi di debug
 # divisione in moduli
 #-------------------
 require './lib/download'
+
 require './lib/info'
+require './lib/info_audio'
+require './lib/info_video'
+require './lib/info_foto'
+
 require './lib/delete'
 require './lib/upload'
 

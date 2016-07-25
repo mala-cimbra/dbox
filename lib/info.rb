@@ -14,7 +14,15 @@ get '/info/:filename/detail' do |filename|
         
         case mimetype
         when /(image)/i
-            @data = "image"
+            @data = """<ul>
+<li><strong>Dimensioni: </strong>#{metadata["size"]}</li>
+<li><strong>Modello Fotocamera: </strong>#{metadata["model"]}</li>
+<li><strong>Data di scatto: </strong>#{metadata["createdate"]}</li>
+</ul>
+<h3>Anteprima</h3>
+<div align=\"center\">
+<img src=\"/downloads/#{filename}\" alt=\"Anteprima\"/>
+</div>"""
         when /(audio)/i
             @data = """<ul>
 <li><strong>Artista: </strong>#{metadata["artist"]}</li>

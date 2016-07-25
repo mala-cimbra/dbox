@@ -20,6 +20,7 @@ require './lib/info_foto'
 
 require './lib/delete'
 require './lib/upload'
+require './lib/helper'
 
 require './lib/debug'
 

@@ -23,13 +23,14 @@ post '/upload' do
         File.open(path, "wb") do |f|
             f.write(tempfile.read)
         end
-        
+        filesize = File.size(path) # dimensioni del file
         filetype = File.mime(path).split[0] # mimetype del file
         shadigest = Digest::SHA256.hexdigest(File.read(path)) # calcola sommahash
         delete_password = params['password'] # tirami fuori la password
+        metadata = info_audio(path)
         
         # aggiungi la cosa al db
-        $db.execute("INSERT INTO files VALUES(NULL, '#{filename}', '#{path}', '#{shadigest}', '#{request.ip}', '#{Time.now}', 0, NULL, NULL, '#{delete_password}', '#{filetype}');")
+        $db.execute("INSERT INTO files VALUES(NULL, '#{filename}', '#{path}', '#{shadigest}', '#{request.ip}', '#{Time.now}', 0, NULL, NULL, '#{delete_password}', '#{filetype}', '#{metadata}', #{filesize});")
     end
     redirect to('/downloads') # mostrami poi quello che hai buttato su
 end

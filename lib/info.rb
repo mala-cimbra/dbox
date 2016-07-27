@@ -12,6 +12,19 @@ get '/info/:filename/detail' do |filename|
         mimetype = @db_file[0][10]
         metadata = JSON.parse(@db_file[0][11])
         
+        if @db_file[0][12] > 1000 && @db_file[0][12] < 999999
+            @size = [@db_file[0][12].to_f / 1024, " K"]
+            @size[0] = @size[0].round(2)
+        elsif @db_file[0][12] > 1000000 && @db_file[0][12] < 999999999
+            @size = [@db_file[0][12].to_f / 1024 / 1024, " M"]
+            @size[0] = @size[0].round(2)
+        elsif @db_file[0][12] > 1000000000
+            @size = [db_file[0][12].to_f / 1024 / 1024 / 1024, " G"]
+            @size[0] = @size[0].round(2)
+        else
+            @size = [@db_file[0][12], " "]
+        end
+        
         case mimetype
         when /(image)/i
             @data = """<ul>
@@ -21,7 +34,7 @@ get '/info/:filename/detail' do |filename|
 </ul>
 <h3>Anteprima</h3>
 <div align=\"center\">
-<img src=\"/downloads/#{filename}\" alt=\"Anteprima\"/>
+<img src=\"/uploads/#{filename}\" alt=\"Anteprima\"/>
 </div>"""
         when /(audio)/i
             @data = """<ul>
@@ -33,7 +46,7 @@ get '/info/:filename/detail' do |filename|
 </ul>
 <h3>Anteprima</h3>
 <div align=\"center\"><audio controls>
-<source src=\"/downloads/#{filename}\" type=\"#{mimetype}\">
+<source src=\"/uploads/#{filename}\" type=\"#{mimetype}\">
 Il tuo browser è vecchio e non supporta il tag audio. Aggiornati!
 </audio></div>"""
         when /(video)/i

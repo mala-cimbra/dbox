@@ -8,21 +8,20 @@ require 'digest'
 
 require 'pp' # messaggi di debug
 
-#-------------------
+#--------------------
 # divisione in moduli
-#-------------------
-require './lib/download'
+#--------------------
+# caricaggio dinamico
+#--------------------
 
-require './lib/info'
-require './lib/info_audio'
-require './lib/info_video'
-require './lib/info_foto'
-
-require './lib/delete'
-require './lib/upload'
-require './lib/helper'
-
-require './lib/debug'
+# carica dinamicamente le librerie all'interno della cartella ./lib
+# lista i file e poi li richiama col require
+# libs è un array, visto che li tira fuori con lib/libreria.rb
+#ci aggiungo un ./ (poi magari alla fine non cambia un cazzo)
+libs = Dir.glob(File.join("lib", "*.rb")).map {|file| "./#{file}"}
+libs.each do |lib|
+    require lib
+end
 
 #------------------------------
 #

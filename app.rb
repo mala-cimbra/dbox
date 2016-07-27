@@ -8,12 +8,17 @@ require 'digest'
 
 require 'pp' # messaggi di debug
 
+#---------------------
+# IMPOSTAZIONI SINATRA
+#---------------------
+
+
+
 #--------------------
 # divisione in moduli
 #--------------------
 # caricaggio dinamico
 #--------------------
-
 # carica dinamicamente le librerie all'interno della cartella ./lib
 # lista i file e poi li richiama col require
 # libs è un array, visto che li tira fuori con lib/libreria.rb

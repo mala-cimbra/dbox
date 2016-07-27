@@ -8,8 +8,8 @@ def analyze(path, mimetype)
     when /(audio)/i
         info_audio(path)
     when /(video)/i
-        JSON.generate('{"type":"video"}')
+        JSON.generate({type: "video"})
     else
-        JSON.generate('{}')
+        JSON.generate({type: "data"})
     end
 end

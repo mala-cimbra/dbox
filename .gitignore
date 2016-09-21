@@ -53,3 +53,5 @@ build-iPhoneSimulator/
 /public/uploads/*.*
 Gemfile.lock
 .directory
+shotgun.sh
+

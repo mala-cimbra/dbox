@@ -2,9 +2,13 @@
 # interfaccia di amministrazione
 ##
 
+### gente che amministra
+
 set :username,'Bond'
-set :token,'shakenN0tstirr3d'
+set :token, Rack::Session::Cookie
 set :password,'007'
+
+enable :sessions
 
 helpers do
     def admin?

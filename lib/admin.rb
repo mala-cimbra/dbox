@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # interfaccia di amministrazione
 ##
-require 'haml'
 
 set :username,'Bond'
 set :token,'shakenN0tstirr3d'
@@ -19,13 +18,17 @@ helpers do
 end
 
 get '/admin' do
-    haml :admin
+    if admin?
+        erb :admin_panel, layout: :admin_layout
+    else
+        erb :admin_login, layout: :admin_layout
+    end
 end
 
 post '/login' do
     if params['username'] == settings.username && params['password'] == settings.password
         response.set_cookie(settings.username, settings.token) 
-        redirect_to('/')
+        redirect to('/admin')
     else
         "Username or Password incorrect"
     end
@@ -33,40 +36,11 @@ end
 
 get '/logout' do
     response.set_cookie(settings.username, false)
-    redirect_to('/')
+    redirect to('/admin')
 end
 
-get '/public' do
-  'Anyone can see this'
-end
 
 get '/private' do
   protected!
   'For Your Eyes Only!'
 end
-
-__END__
-@@layout
-!!! 5
-%html
-  %head
-    %meta(charset="utf-8")
-    %title Really Simple Authentication
-  %body
-    %a(href='/admin')Login
-    %a(href='/logout')Logout
-    %a(href='/public')Public
-    %a(href='/private')Private
-    = yield
-@@admin
-%form(action="/login" method="post")
-  %label(for="username")Username:
-  %input#username(type="text" name="username")
-  %label(for="password")Password:
-  %input#password(type="password" name="password")
-  %input(type="submit" value="Login") or <a href="/">Cancel</a>
-@@index
--if admin?
-  %h1 Welcome 007!
--else
-  %h1 Welcome!

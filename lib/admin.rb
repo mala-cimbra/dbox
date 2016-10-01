@@ -4,8 +4,7 @@
 ### gente che amministra
 
 # tiriamo fuori l'unico admin
-utente = $db.execute("SELECT username, sha_password FROM admministratori LIMIT 1;");
-
+utente = $db.execute("SELECT username, sha_password FROM amministratori LIMIT 1;");
 
 set :username, utente[0][0]
 set :token, SecureRandom.uuid

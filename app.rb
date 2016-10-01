@@ -13,7 +13,13 @@ require 'pp' # messaggi di debug
 # IMPOSTAZIONI SINATRA
 #---------------------
 
+#------------------------------
+#
+# Database SQLite al momento
+#
+# -----------------------------
 
+$db = SQLite3::Database.open("database.db")
 
 #--------------------
 # divisione in moduli
@@ -29,13 +35,7 @@ libs.each do |lib|
     require lib
 end
 
-#------------------------------
-#
-# Database SQLite al momento
-#
-# -----------------------------
 
-$db = SQLite3::Database.open("database.db")
 
 #------------------------------
 # HTTP Login

@@ -5,6 +5,7 @@
 require 'json'
 require 'base64'
 require 'digest'
+require 'securerandom'
 
 require 'pp' # messaggi di debug
 

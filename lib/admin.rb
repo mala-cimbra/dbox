@@ -1,14 +1,10 @@
 #!/usr/bin/env ruby
 # interfaccia di amministrazione
 ##
-
 ### gente che amministra
-
 set :username,'Bond'
-set :token, Rack::Session::Cookie
+set :token, SecureRandom.uuid
 set :password,'007'
-
-enable :sessions
 
 helpers do
     def admin?
@@ -34,17 +30,11 @@ post '/login' do
         response.set_cookie(settings.username, settings.token) 
         redirect to('/admin')
     else
-        "Username or Password incorrect"
+        erb :admin_failed, layout: :admin_layout
     end
 end
 
 get '/logout' do
     response.set_cookie(settings.username, false)
     redirect to('/admin')
-end
-
-
-get '/private' do
-  protected!
-  'For Your Eyes Only!'
 end

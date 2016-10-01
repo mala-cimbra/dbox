@@ -2,9 +2,14 @@
 # interfaccia di amministrazione
 ##
 ### gente che amministra
-set :username,'Bond'
+
+# tiriamo fuori l'unico admin
+utente = $db.execute("SELECT username, sha_password FROM admministratori LIMIT 1;");
+
+
+set :username, utente[0][0]
 set :token, SecureRandom.uuid
-set :password,'007'
+set :password, utente[0][1]
 
 helpers do
     def admin?
@@ -19,6 +24,8 @@ end
 
 get '/admin' do
     if admin?
+        #tiriamo fuori tutti i file
+        @files = $db.execute("SELECT * FROM files;");
         erb :admin_panel, layout: :admin_layout
     else
         erb :admin_login, layout: :admin_layout
@@ -26,8 +33,8 @@ get '/admin' do
 end
 
 post '/login' do
-    if params['username'] == settings.username && params['password'] == settings.password
-        response.set_cookie(settings.username, settings.token) 
+    if params['username'] == settings.username && Digest::SHA256.hexdigest(params['password']) == settings.password
+        response.set_cookie(settings.username, settings.token)
         redirect to('/admin')
     else
         erb :admin_failed, layout: :admin_layout

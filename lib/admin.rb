@@ -7,7 +7,7 @@
 utente = $db.execute("SELECT username, sha_password FROM amministratori LIMIT 1;");
 
 set :username, utente[0][0]
-set :token, SecureRandom.uuid
+set :token, "perilmomentousiamountokenstaticocheccazzo" #SecureRandom.uuid
 set :password, utente[0][1]
 
 helpers do
@@ -16,19 +16,24 @@ helpers do
     end
     
     def protected!
-        halt [ 401, 'Not Authorized' ] unless admin?
+        halt [ 401, 'Unathorized' ] unless admin?
     end
 
 end
 
-get '/admin' do
+get '/login' do
     if admin?
-        #tiriamo fuori tutti i file
-        @files = $db.execute("SELECT * FROM files;");
-        erb :admin_panel, layout: :admin_layout
+        redirect to('/admin')
     else
         erb :admin_login, layout: :admin_layout
     end
+end
+
+get '/admin' do
+    protected!
+    #tiriamo fuori tutti i file
+    @files = $db.execute("SELECT * FROM files;");
+    erb :admin_panel, layout: :admin_layout
 end
 
 post '/login' do
@@ -42,5 +47,5 @@ end
 
 get '/logout' do
     response.set_cookie(settings.username, false)
-    redirect to('/admin')
+    redirect to('/login')
 end

@@ -1,13 +1,19 @@
 h1, h2, h3 {
     line-height: 1.2;
 }
+
+html {
+    height: 100%;
+}
+
 body {
-    margin: 2.5em auto;
+    margin: 2em auto;
     max-width: 50em;
     line-height: 1.6;
     font-size: 1.2em;
     color: #444;
     padding: 0 1em;
+    height: 100%;
 }
 
 /* stile dei link */
@@ -27,4 +33,16 @@ a:active {
 img {
     width: 100%;
     height: auto;
+}
+
+#container {
+    min-height:100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto;
+}
+
+#footer, #push {
+    height: 3em;
+    clear: both;
 }

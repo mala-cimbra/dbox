@@ -3,7 +3,7 @@
     <% @list.sort.each do |file| %>
     <tr>
         <td><a href="/info/<%= file[0] %>/detail#info"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></a></td>
-        <td><a href="/downloads/<%= file[0] %>"><%= file[0] %></a></td>
+        <td><a href="/downloads/get/<%= file[0] %>"><%= file[0] %></a></td>
         <td><%= file[1] %></td>
         <td><a href="/delete/<%= file[0] %>/confirm#delete"><i title="Elimina" class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
     </tr>

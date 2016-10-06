@@ -29,7 +29,7 @@ get '/downloads' do
     erb :downloads
 end
 
-get '/downloads/:filename' do |filename|
+get '/downloads/get/:filename' do |filename|
     # se il nome del file esiste
     # TODO: fargli fare un controllo anche sul db
     # se per caso esiste il file, ma non sul db, boh,

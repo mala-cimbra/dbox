@@ -3,11 +3,11 @@
 def analyze(path, mimetype)
 
     case mimetype
-    when /(image)/i
+    when /(image)/i # info_foto
         info_foto(path)
-    when /(audio)/i
-        info_audio(path)
-    when /(video)/i
+    when /(audio)/i # info_audio
+        info_audio(path, mimetype)
+    when /(video)/i # info_video
         JSON.generate({type: "video"})
     else
         JSON.generate({type: "data"})

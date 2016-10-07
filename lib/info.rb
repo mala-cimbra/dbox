@@ -43,6 +43,7 @@ get '/info/:filename/detail' do |filename|
 <li><strong>Album: </strong>#{metadata["album"]}</li>
 <li><strong>Durata: </strong>#{metadata["length"]}</li>
 <li><strong>Bitrate: </strong>#{metadata["bitrate"]} kbps</li>
+<li><strong>Copertina: </strong><img alt=\"Embedded Image\" src=\"data:image/jpg;base64,#{metadata["base64_cover"]} /></li>
 </ul>
 <h3>Anteprima</h3>
 <div align=\"center\"><audio controls>

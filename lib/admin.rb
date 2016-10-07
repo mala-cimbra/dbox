@@ -56,5 +56,52 @@ get '/admin/filelist' do
 end
 
 post '/admin/rescan' do
+    rescan = Dir.glob("./public/uploads/*")
+    # /!\ ATTENZIONE /!\
+    # magari prima metti una modalità manutenzione
+    # TODO: ci penserò
+    
+    # Query: pulisci la tabella files
+    $db.execute("DELETE FROM files;")
+    
+    # E li rimettiamo con pw "test", perché sennò passa lo stronzo di turno che cancella tutto
+    rescan.each do |rescan_file|
+        # magari 'sta roba la sposto su qualche funzione
+        filename = rescan_file.split("/").last
+        path = rescan_file # per copiare e incollare la roba di sotto
+        shadigest = Digest::SHA256.hexdigest(File.read(path))
+        ippi = "localhost" # localhost perché rescanno
+        delete_password = "rescannio" # magari la prossima volta farò qualcosa di random
+        mimetype = File.mime(path).split[0] # mime
+        metadata = analyze(path, mimetype)
+        filesize = File.size(path)
+    
+        # metti nel db
+        $db.execute("INSERT INTO files VALUES(NULL, '#{filename}', '#{path}', '#{shadigest}', '#{ippi}', '#{Time.now}', 0, NULL, NULL, '#{delete_password}', '#{mimetype}', '#{metadata}', #{filesize});")
+    end
+    
     redirect to('/admin/filelist')
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

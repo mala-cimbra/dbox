@@ -9,14 +9,14 @@ end
 post '/upload' do
     # semplice check sull'input, se qualcuno spara zero file, se qualcuno uppa un file con
     # lo stesso nome già presente
-    if params['file'] == nil || params['file'] == "" || File.exist?("./public/uploads/#{params['file'][:filename]}")
+    if params['file'] == nil || params["file"] == "" || File.exist?("./public/uploads/#{params["file"][:filename].delete("'")}")
         # redireziona ad upload
         # TODO magari mostrare un messaggio di errore
         redirect to('/upload')
     else
         # qua c'è un po' di magia, la prendo per buona
-        tempfile = params['file'][:tempfile] # file temporaneo uploadato, penso vada in /tmp
-        filename = params['file'][:filename] # file scritto
+        tempfile = params["file"][:tempfile] # file temporaneo uploadato, penso vada in /tmp
+        filename = params["file"][:filename].delete("'") # file scritto
         path = "./public/uploads/#{filename}" # percorso di destinazione
         
         # scrivi
@@ -26,9 +26,9 @@ post '/upload' do
         filesize = File.size(path) # dimensioni del file
         mimetype = File.mime(path).split[0] # mimetype del file
         shadigest = Digest::SHA256.hexdigest(File.read(path)) # calcola sommahash
-        delete_password = params['password'] # tirami fuori la password
+        delete_password = params["password"] # tirami fuori la password
         
-        
+        # analyze sta su helper
         metadata = analyze(path, mimetype)
         
         # aggiungi la cosa al db

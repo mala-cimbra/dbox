@@ -16,12 +16,12 @@ helpers do
     end
     
     def protected!
-        halt [ 401, 'Unathorized' ] unless admin?
+        halt [ 401, 'FUORI DAI COGLIONI!' ] unless admin?
     end
 
 end
 
-get '/login' do
+get '/login' do # interfaccia di login
     if admin?
         redirect to('/admin')
     else
@@ -29,14 +29,7 @@ get '/login' do
     end
 end
 
-get '/admin' do
-    protected!
-    #tiriamo fuori tutti i file
-    @files = $db.execute("SELECT * FROM files;");
-    erb :admin_panel, layout: :admin_layout
-end
-
-post '/login' do
+post '/login' do #form di login
     if params['username'] == settings.username && Digest::SHA256.hexdigest(params['password']) == settings.password
         response.set_cookie(settings.username, settings.token)
         redirect to('/admin')
@@ -45,7 +38,23 @@ post '/login' do
     end
 end
 
-get '/logout' do
+get '/logout' do # logout
     response.set_cookie(settings.username, false)
     redirect to('/login')
+end
+
+get '/admin' do
+    protected!
+    erb :admin_panel, layout: :admin_layout
+end
+
+get '/admin/filelist' do
+    protected!
+    #tiriamo fuori tutti i file
+    @files = $db.execute("SELECT * FROM files;");
+    erb :admin_filelist, layout: :admin_layout
+end
+
+post '/admin/rescan' do
+    redirect to('/admin/filelist')
 end

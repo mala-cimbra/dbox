@@ -65,6 +65,7 @@ end
 # Non serve fare pagine che mostrano l'errore
 # perché deve funzionare da captive portal
 # ma si può ampliare nel caso
-not_found do
-    redirect to('/')
-end
+
+#not_found do
+#    redirect to('/')
+#end

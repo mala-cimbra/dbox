@@ -1,0 +1,56 @@
+<header>
+    <h1>dBOX - Administration > File List</h1>
+    <aside><a href="/logout">Logout</a></aside>
+</header>
+<ul>
+    <li><a href="/admin">Principale</a></li>
+    <li><a href="/admin/messaggi">Messaggi</a></li>
+    <li><a href="/admin#">Opzione-3</a></li>
+</ul>
+<div>
+    <div style="float: left; width: 50%">
+    <form action="/admin/rescan" method="POST">
+    </div>
+    <input type="submit" value="Rescan Files!">
+    </form>
+    </div>
+    <div style="float: right; width: 50%">
+    </div>
+</div>
+
+<div style="overflow-x:auto;">
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>filename</th>
+    <th>path</th>
+    <th>shasum</th>
+    <th>ip_upload</th>
+    <th>date_upload</th>
+    <th>dl_number</th>
+    <th>last_dl_ip</th>
+    <th>last_dl_date</th>
+    <th>delete_password</th>
+    <th>filetype</th>
+    <th>metadata</th>
+    <th>filesize</th>
+  </tr>
+  <% @files.each do |file| %>
+  <tr>
+    <td><%= file[0] %></td>
+    <td><%= file[1] %></td>
+    <td><%= file[2] %></td>
+    <td><%= file[3] %></td>
+    <td><%= file[4] %></td>
+    <td><%= file[5] %></td>
+    <td><%= file[6] %></td>
+    <td><%= file[7] %></td>
+    <td><%= file[8] %></td>
+    <td><%= file[9] %></td>
+    <td><%= file[10] %></td>
+    <td><%= file[11] %></td>
+    <td><%= file[12] %></td>
+  </tr>
+  <% end %>
+</table>
+</div>

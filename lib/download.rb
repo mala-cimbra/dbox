@@ -14,14 +14,15 @@ get '/downloads' do
     # [[filename, filetype], [filename, filetype], [filename, filetype], [filename, filetype] ...] 
     @list = $db.execute("SELECT filename, filetype FROM files;")
     @list.map do |file|
-        type = file[1].split("/")
-        case type[0]
-        when "image"
+        case file[1]
+        when /(image)/i
             file[1] = "<i class=\"fa fa-file-image-o fa-2x\" aria-hidden=\"true\"></i>"
-        when "audio"
+        when /(audio)/i
             file[1] = "<i class=\"fa fa-file-audio-o fa-2x\" aria-hidden=\"true\"></i>"
-        when "video"
+        when /(video)/i
             file[1] = "<i class=\"fa fa-file-video-o fa-2x\" aria-hidden=\"true\"></i>"
+        when /(text)/i
+            file[1] = "<i class=\"fa fa-file-text-o fa-2x\" aria-hidden=\"true\"></i>"
         else
             file[1] = "<i class=\"fa fa-file-o fa-2x\" aria-hidden=\"true\"></i>"
         end

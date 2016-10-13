@@ -21,7 +21,7 @@ get '/downloads' do
             file[1] = "<i class=\"fa fa-file-audio-o fa-2x\" aria-hidden=\"true\"></i>"
         when /(video)/i
             file[1] = "<i class=\"fa fa-file-video-o fa-2x\" aria-hidden=\"true\"></i>"
-        when /(text)/i
+        when /(text|document)/i
             file[1] = "<i class=\"fa fa-file-text-o fa-2x\" aria-hidden=\"true\"></i>"
         else
             file[1] = "<i class=\"fa fa-file-o fa-2x\" aria-hidden=\"true\"></i>"

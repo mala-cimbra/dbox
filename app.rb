@@ -14,9 +14,7 @@ require 'pp' # messaggi di debug
 #---------------------
 
 #------------------------------
-#
 # Database SQLite al momento
-#
 # -----------------------------
 
 $db = SQLite3::Database.open("database.db")
